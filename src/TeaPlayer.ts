@@ -8,6 +8,7 @@ import FormData from 'form-data';
 const defaultServerIp = '192.168.100.8';
 const serverIpAddress = process.env.IP_ADDRESS || defaultServerIp;
 
+startServer();
 
 console.log('Log: Get test from dealer...')
 http.get(`http://${serverIpAddress}:30552/download/testgameid123`, (res) => {
@@ -33,6 +34,16 @@ async function runTest(){
     } catch (error) {
         console.log('Error:' + error)
         await returnResults();
+    }
+}
+
+async function startServer(){
+    try {
+        console.log('Log: Start server...');
+        const pwrun = execa('dotnet C:\APP\BUILD\EK7TKN_HFT_2021221.Endpoint.dll --urls=http://0.0.0.0:80');
+
+    } catch (error) {
+        console.log('Error:' + error)
     }
 }
 
