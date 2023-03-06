@@ -12,12 +12,12 @@
     "preserveOutput": "always",
     "projects": [
       {
-        "outputDir": "C:/Users/gynat/Downloads/Thesis/CleanBuilds/player/test-results",
+        "outputDir": "C:/Users/natan/Downloads/Thesis/Local/WorkPlayer/ThesisWorkPlayer/test-results",
         "repeatEach": 1,
         "retries": 0,
         "id": "chromium",
         "name": "chromium",
-        "testDir": "C:/Users/gynat/Downloads/Thesis/CleanBuilds/player/src/tests",
+        "testDir": "C:/Users/natan/Downloads/Thesis/Local/WorkPlayer/ThesisWorkPlayer/src/tests",
         "testIgnore": [],
         "testMatch": [
           "**/?(*.)@(spec|test).*"
@@ -41,8 +41,8 @@
       "max": 5,
       "threshold": 15000
     },
-    "configFile": "C:\\Users\\gynat\\Downloads\\Thesis\\CleanBuilds\\player\\playwright.config.ts",
-    "rootDir": "C:/Users/gynat/Downloads/Thesis/CleanBuilds/player/src/tests",
+    "configFile": "C:\\Users\\natan\\Downloads\\Thesis\\Local\\WorkPlayer\\ThesisWorkPlayer\\playwright.config.ts",
+    "rootDir": "C:/Users/natan/Downloads/Thesis/Local/WorkPlayer/ThesisWorkPlayer/src/tests",
     "quiet": false,
     "shard": null,
     "updateSnapshots": "missing",
@@ -79,7 +79,7 @@
                     {
                       "workerIndex": 0,
                       "status": "passed",
-                      "duration": 1472,
+                      "duration": 190,
                       "errors": [],
                       "stdout": [
                         {
@@ -88,7 +88,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2023-02-12T07:50:12.600Z",
+                      "startTime": "2023-03-05T23:52:46.987Z",
                       "attachments": []
                     }
                   ],
