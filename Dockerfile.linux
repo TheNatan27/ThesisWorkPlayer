@@ -1,0 +1,26 @@
+############ INSTALL DEPENDENCIES
+
+FROM ubuntu:22.04 as dependecies
+
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get install -y dotnet-sdk-6.0 && \
+    dotnet --version && \
+    apt-get -y install nodejs && \
+    node -v && \
+    apt-get -y install npm
+
+############ COPY AND INSTALL APPS
+FROM dependecies as installer 
+
+COPY /EK7TKN_HFT_2021221/ /SOURCE
+RUN dotnet publish -o /BUILD ./SOURCE/EK7TKN_HFT_2021221.sln
+
+COPY /ThesisWorkPlayer/ /WORKPLAYER
+RUN npm install --prefix ./WORKPLAYER/
+
+ENTRYPOINT  npm test --prefix ./WORKPLAYER/
+
+#ENTRYPOINT  dotnet /BUILD/EK7TKN_HFT_2021221.Endpoint.dll --urls=http://0.0.0.0:5000
+#ENTRYPOINT ["tail"]
+#CMD ["-f","/dev/null"]
