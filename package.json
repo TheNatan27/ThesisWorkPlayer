@@ -22,7 +22,7 @@
 
   "scripts": {
 
-    "test": "ts-node ./src/TeaPlayer.ts"
+    "test": "node ./outDir/Worker.js"
 
   },
 
@@ -32,7 +32,9 @@
 
     "form-data": "^4.0.0",
 
-    "node-rest-client": "^3.1.1"
+    "node-rest-client": "^3.1.1",
+
+    "zod": "^3.22.2"
 
   }
 
