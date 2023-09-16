@@ -1,9 +1,10 @@
-import execa from 'execa';
+import execa, { ExecaChildProcess } from 'execa';
 import http from 'http';
 import fs from 'fs';
 import axios from 'axios';
 import z, { string } from 'zod';
 import path from 'path';
+var spawn = require('child_process').spawn;
 
 const defaultServerIp = '192.168.100.8';
 const serverIpAddress = process.env.IP_ADDRESS || defaultServerIp;
@@ -15,7 +16,6 @@ const testIdSchema = z.object({
 });
 type TestIdMessage = z.infer<typeof testIdSchema>;
 
-startServer();
 reserveTestId();
 
 // 1. Start server
@@ -51,11 +51,14 @@ async function downloadTestScript(testId: string) {
 }
 
 async function runTest(testId: string){
+    const dotnetServer = startServer();
     try {
-        console.log('Log: Run test...')
-        const pwrun = execa.commandSync('npx playwright test')
-        console.log('Log: Playwright results...')
-        console.log(pwrun.stdout)
+        console.log('Log: Run test...');
+        const pwrun = execa.commandSync('npx playwright test');
+        console.log('Log: Playwright results...');
+        console.log(pwrun.stdout);
+        console.log(`Kill process: ${dotnetServer}`);
+        process.kill(dotnetServer)
         await returnResults(testId);
     } catch (error) {
         console.error('Error:' + error)
@@ -80,12 +83,16 @@ async function returnResults(testId: string) {
     }
 }
 
-async function startServer(){
-    try {
-        console.log('Log: Start server...');
-        const stdout = execa('dotnet', ['/BUILD/EK7TKN_HFT_2021221.Endpoint.dll', '--urls=http://0.0.0.0:5000'], {detached: true}).stdout?.pipe(process.stdout);
-        //const stdout = execa('dotnet --info', {detached: true}).stdout?.pipe(process.stdout);
-    } catch (error) {
-        console.log('Error:' + error)
-    }
+function startServer(): number{
+    console.log('Log: Start server...');
+    const dotnetServer = execa('dotnet', ['/BUILD/EK7TKN_HFT_2021221.Endpoint.dll', '--urls=http://0.0.0.0:5000'], {detached: true});
+    dotnetServer.stdout?.pipe(process.stdout)
+    console.log(`Serverdata: ${dotnetServer}`)
+    console.log(`PID: ${dotnetServer.pid}`)
+    return dotnetServer.pid!;
+    //const stdout = execa('dotnet --info', {detached: true}).stdout?.pipe(process.stdout);
+}
+
+async function stopServer() {
+    
 }
