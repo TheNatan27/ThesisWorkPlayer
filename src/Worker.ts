@@ -25,16 +25,18 @@ reserveTestId();
 // 5. Return result
 
 async function reserveTestId() {
+    const dotnetServer = startServer();
     try {
         const response = await axios.get(`${baseUrl}/reserve-test/${suiteId}`);
         const testId = testIdSchema.parse(response.data).testID;
-        await downloadTestScript(testId);
+        await downloadTestScript(testId, dotnetServer);
     } catch (error) {
         console.error('Error:' + error)
+        stopServer(dotnetServer)
     }
 }
 
-async function downloadTestScript(testId: string) {
+async function downloadTestScript(testId: string, dotnetServer: number) {
     http.get(`${baseUrl}/request-test/${suiteId}/${testId}`, (response) => {
      const path = "./src/tests/test.spec.ts";
 
@@ -45,28 +47,26 @@ async function downloadTestScript(testId: string) {
      writeStream.on('finish', async () => {
          writeStream.close();
          console.log('Log: Test downloaded!');
-         await runTest(testId)
+         await runTest(testId, dotnetServer)
      })
     })
 }
 
-async function runTest(testId: string){
-    const dotnetServer = startServer();
+async function runTest(testId: string, dotnetServer: number){
     try {
         console.log('Log: Run test...');
         const pwrun = execa.commandSync('npx playwright test');
         console.log('Log: Playwright results...');
         console.log(pwrun.stdout);
-        console.log(`Kill process: ${dotnetServer}`);
-        process.kill(dotnetServer)
-        await returnResults(testId);
+        await returnResults(testId, dotnetServer);
     } catch (error) {
         console.error('Error:' + error)
-        await returnResults(testId);
+        await returnResults(testId, dotnetServer);
     }
 }
 
-async function returnResults(testId: string) {
+async function returnResults(testId: string, dotnetServer: number) {
+    stopServer(dotnetServer)
     console.log('Log: Return results...')
     console.log(`Return to: ${baseUrl}/return-test/${suiteId}/${testId}`)
     const resultData = fs.readFileSync('/WORKPLAYER/result/jres.json', {encoding: 'utf-8'})
@@ -93,6 +93,7 @@ function startServer(): number{
     //const stdout = execa('dotnet --info', {detached: true}).stdout?.pipe(process.stdout);
 }
 
-async function stopServer() {
-    
+function stopServer(serverPid: number) {
+    console.log(`Kill process: ${serverPid}`);
+    process.kill(serverPid)
 }
