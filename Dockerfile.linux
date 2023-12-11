@@ -6,9 +6,12 @@ RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y dotnet-sdk-6.0 && \
     dotnet --version && \
-    apt-get -y install nodejs && \
-    node -v && \
-    apt-get -y install npm
+    apt-get install -y curl
+
+
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    node -v 
 
 ############ COPY AND INSTALL APPS
 FROM dependecies as installer 
@@ -17,7 +20,7 @@ COPY /EK7TKN_HFT_2021221/ /SOURCE
 RUN dotnet publish -o /BUILD ./SOURCE/EK7TKN_HFT_2021221.sln
 
 COPY /ThesisWorkPlayer/ /WORKPLAYER
-RUN npm install --prefix ./WORKPLAYER/
+RUN npm install --prefix ./WORKPLAYER/ && \
+    npx playwright install-deps
 
-WORKDIR /
 ENTRYPOINT  npm test --prefix ./WORKPLAYER/
