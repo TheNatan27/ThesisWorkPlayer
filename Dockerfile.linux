@@ -21,7 +21,3 @@ RUN npm install --prefix ./WORKPLAYER/
 
 WORKDIR /
 ENTRYPOINT  npm test --prefix ./WORKPLAYER/
-
-#ENTRYPOINT  dotnet /BUILD/EK7TKN_HFT_2021221.Endpoint.dll --urls=http://0.0.0.0:5000
-#ENTRYPOINT ["tail"]
-#CMD ["-f","/dev/null"]
